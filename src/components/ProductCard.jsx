@@ -60,7 +60,7 @@ export default function ProductCard(props) {
         ${props.className || ""}
       `}
     >
-      {/* ✅ Inline badges row */}
+      {/*Inline badges row */}
       {(discount || stockLabel) && (
         <div className="absolute top-2 left-4 right-4 flex justify-between items-center">
           {discount && discount > 0 && (

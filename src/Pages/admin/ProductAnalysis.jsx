@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -21,7 +20,7 @@ import autoTableImport from "jspdf-autotable";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-/* ---------- UI helpers ---------- */
+/*UI helpers*/
 const Card = ({ children, className = "" }) => (
   <div className={`rounded-2xl border border-slate-200 bg-white shadow-sm ${className}`}>{children}</div>
 );
@@ -40,6 +39,7 @@ const fmtCurrency = new Intl.NumberFormat("en-LK", {
   currency: "LKR",
   maximumFractionDigits: 2,
 });
+
 const toDayKey = (dLike) => {
   const d = new Date(dLike);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -51,7 +51,7 @@ export default function ProductAnalysis() {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Date range (react-datepicker)
+  // Date range 
   const [fromDate, setFromDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 13);
@@ -60,6 +60,7 @@ export default function ProductAnalysis() {
   const [toDate, setToDate] = useState(() => new Date());
 
   const [ready, setReady] = useState(false);
+  
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 450);
     return () => clearTimeout(t);
@@ -85,9 +86,8 @@ export default function ProductAnalysis() {
       .finally(() => setLoading(false));
   }, []);
 
-  /* --------- Build latest per-unit cost per product from suppliers --------- */
+  /*latest per-unit cost per product from suppliers*/
   const unitCostMap = useMemo(() => {
-    // latestByPid: pid -> { time, unitCost }
     const latestByPid = new Map();
 
     const getPid = (s) => s.productId || s.productID || s.product_id || s.product?.id || s.product?.productId;
@@ -100,7 +100,7 @@ export default function ProductAnalysis() {
 
       const t = getTime(s);
 
-      // preferred explicit per-unit field if present, else derive from batch (cost/stock)
+      //per-unit(cost/stock)
       const stock = Number(s.stock ?? s.quantity ?? 0);
       const batchCost = Number(s.cost ?? s.totalCost ?? 0);
       const derivedUnit = stock > 0 ? batchCost / stock : 0;
@@ -116,7 +116,7 @@ export default function ProductAnalysis() {
     return map;
   }, [suppliers]);
 
-  /* ------------------------ Aggregates (Revenue/Profit) ------------------------ */
+  /*(Revenue/Profit)*/
   const {
     dailyRows,
     totals,
@@ -165,10 +165,10 @@ export default function ProductAnalysis() {
         const qty = Number(line.quantity ?? line.qty ?? 0);
         if (qty <= 0) continue;
 
-        // selling price (customer pays)
+        // selling price
         const price = Number(pInfo.price ?? line.price ?? 0);
 
-        // supplier unit cost (from latest supplier record); 0 if unknown
+        // supplier unit cost
         const unitCost = unitCostMap.get(pid) ?? 0;
 
         const lineRevenue = price * qty;
@@ -213,7 +213,7 @@ export default function ProductAnalysis() {
     };
   }, [orders, unitCostMap, fromDate, toDate]);
 
-  /* ----------------------------- PDF Export ----------------------------- */
+  /* PDF Export*/
   const kpiRef = useRef(null);
   const revRef = useRef(null);
   const profitRef = useRef(null);
@@ -336,7 +336,7 @@ export default function ProductAnalysis() {
     }
   };
 
-  /* ------------------------------ Render ------------------------------ */
+  /*Render*/
   return (
     <div className="w-full h-full max-h-full overflow-y-auto p-4 md:p-6 font-[var(--font-main)]">
       {/* header */}

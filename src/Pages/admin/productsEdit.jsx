@@ -8,21 +8,19 @@ export default function EditProductPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Guard against missing state
   const initial = useMemo(() => location.state || {}, [location.state]);
 
-  const [productId]      = useState(initial.productId); // fixed
+  const [productId]      = useState(initial.productId); 
   const [name, setName]  = useState(initial.name || "");
   const [category, setCategory] = useState((initial.categories && initial.categories[0]) || "");
   const [description, setDescription] = useState(initial.description || "");
   const [labelledPrice, setLabelledPrice] = useState(initial.labelledPrice ?? "");
   const [price, setPrice] = useState(initial.price ?? "");
   const [stock, setStock] = useState(initial.stock ?? "");
-  const [files, setFiles] = useState([]); // newly picked files
-  const [previews, setPreviews] = useState(initial.images || []); // show existing by default
+  const [files, setFiles] = useState([]); 
+  const [previews, setPreviews] = useState(initial.images || []); 
   const [submitting, setSubmitting] = useState(false);
 
-  // predefined categories
   const categoriesList = [
     "Fresh Fruits",
     "Meat & Fish",
@@ -43,11 +41,9 @@ export default function EditProductPage() {
     "Offers",
   ];
 
-  // cleanup created object URLs on unmount
   useEffect(() => {
     return () => {
       previews.forEach((p) => {
-        // only revoke if it's an object URL (blob:)
         if (typeof p === "string" && p.startsWith("blob:")) {
           URL.revokeObjectURL(p);
         }
@@ -60,18 +56,14 @@ export default function EditProductPage() {
     if (!picked.length) return;
     setFiles(picked);
     const created = picked.map((f) => URL.createObjectURL(f));
-    setPreviews(created); // replace the list visually with the new selection
+    setPreviews(created); 
   }
 
   function removeImage(idx) {
-    // purely visual removal; if you want to also delete old files from storage,
-    // handle that on backend or add an API call here.
     const next = [...previews];
     const [removed] = next.splice(idx, 1);
     if (removed?.startsWith?.("blob:")) URL.revokeObjectURL(removed);
     setPreviews(next);
-
-    // if the removed preview came from current picked files, reflect that too
     if (files.length) {
       const nf = [...files];
       nf.splice(idx, 1);
@@ -90,14 +82,12 @@ export default function EditProductPage() {
     }
 
     if (!name.trim() || !category) {
-      toast.error("Please fill required fields (Name, Category)");
+      toast.error("Please fill required fields");
       return;
     }
-
+    
     try {
       setSubmitting(true);
-
-      // If user picked new files, upload and replace images; otherwise keep existing
       let imageUrls = initial.images || [];
       if (files.length > 0) {
         imageUrls = await Promise.all(files.map((f) => mediaUpload(f)));
@@ -284,8 +274,6 @@ export default function EditProductPage() {
   );
 }
 
-
-
 function Field({ label, value, onChange, placeholder, type = "text", disabled = false }) {
   return (
       <div className="flex flex-col">
@@ -294,9 +282,7 @@ function Field({ label, value, onChange, placeholder, type = "text", disabled = 
             type={type}
             disabled={disabled}
             value={value}
-
             required
-
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             className={`rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 ${
@@ -316,9 +302,7 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -334,9 +318,7 @@ function TextareaField({ label, value, onChange, placeholder, rows = 5 }) {
         <textarea
             rows={rows}
             value={value}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -351,9 +333,7 @@ function SelectField({ label, value, onChange, options = [], placeholder = "Sele
         <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
         <select
             value={value}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         >

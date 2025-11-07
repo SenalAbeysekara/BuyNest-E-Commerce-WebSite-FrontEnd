@@ -7,13 +7,13 @@ import mediaUpload from "../../utils/mediaUpload.jsx";
 export default function AddProductPage() {
   const [productId, setProductId] = useState("");
   const [name, setName] = useState("");
-  const [category, setCategory] = useState(""); // single category (dropdown)
+  const [category, setCategory] = useState(""); 
   const [description, setDescription] = useState("");
   const [labelledPrice, setLabelledPrice] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [files, setFiles] = useState([]);       // File[]
-  const [previews, setPreviews] = useState([]); // string[]
+  const [files, setFiles] = useState([]);       
+  const [previews, setPreviews] = useState([]); 
   const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -72,7 +72,6 @@ export default function AddProductPage() {
       return;
     }
 
-    // basic validation (mirrors your first version)
     if (!productId.trim()) return toast.error("Product ID is required");
     if (!name.trim()) return toast.error("Product Name is required");
     if (!category.trim()) return toast.error("Please select a category");
@@ -88,7 +87,7 @@ export default function AddProductPage() {
       const payload = {
         productId: productId.trim(),
         name: name.trim(),
-        categories: [category], // ✅ backend expects array; single category
+        categories: [category], 
         description: description.trim(),
         images: imageUrls,
         labelledPrice: Number(labelledPrice) || 0,
@@ -122,7 +121,7 @@ export default function AddProductPage() {
 
         {/* Card */}
         <form
-            onSubmit={addProduct}
+            onSubmit={addProduct} 
             className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-sm"
         >
           <div className="p-4 md:p-6 space-y-5">
@@ -130,9 +129,7 @@ export default function AddProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field
                   label="Product ID *"
-
                   placeholder="001"
-
                   value={productId}
                   onChange={setProductId}
               />
@@ -203,9 +200,6 @@ export default function AddProductPage() {
                     multiple
                     accept="image/*"
                     className="hidden"
-
-                    required
-
                     onChange={onPickImages}
                 />
                 <label
@@ -271,8 +265,6 @@ export default function AddProductPage() {
   );
 }
 
-
-
 function Field({ label, value, onChange, placeholder, type = "text" }) {
   return (
       <div className="flex flex-col">
@@ -280,9 +272,7 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
         <input
             type={type}
             value={value}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -300,9 +290,7 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -320,9 +308,7 @@ function TextareaField({ label, value, onChange, placeholder, rows = 5 }) {
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-
             required
-
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
@@ -335,9 +321,7 @@ function SelectField({ label, value, onChange, options = [], placeholder = "Sele
         <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
         <select
             value={value}
-
             required
-
             onChange={(e) => onChange(e.target.value)}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         >

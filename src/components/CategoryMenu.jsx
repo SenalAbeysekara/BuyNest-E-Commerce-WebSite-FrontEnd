@@ -17,7 +17,7 @@ function chunkArray(arr, size) {
 function slugify(s) {
   return s.toLowerCase()
     .trim()
-    .replace(/&/g, "-and-")      // 👈 mark & as "-and-" instead of removing
+    .replace(/&/g, "-and-")      
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
@@ -28,7 +28,6 @@ export default function GroceryMegaMenu() {
     const cols = chunkArray(categories, 4);
     const timerRef = useRef(null);
 
-    // close on outside click
     useEffect(() => {
         function onDocClick(e) {
             if (!rootRef.current) return;
@@ -43,7 +42,7 @@ export default function GroceryMegaMenu() {
         setOpen(true);
     }
     function handleLeave() {
-        timerRef.current = setTimeout(() => setOpen(false), 150); // 150ms delay
+        timerRef.current = setTimeout(() => setOpen(false), 150); 
     }
 
     return (

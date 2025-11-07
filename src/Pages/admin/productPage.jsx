@@ -36,7 +36,6 @@ export default function ProductPage() {
         axios
             .get(import.meta.env.VITE_BACKEND_URL + "/api/products")
             .then((res) => {
-                // Sort by productId in descending order
                 const updated = res.data
                     .map((p) => ({ ...p, notified: false }))
                     .sort((a, b) => b.productId.localeCompare(a.productId));
@@ -53,7 +52,7 @@ export default function ProductPage() {
     }
   }, [isLoading]);
 
-  // ✅ Delete product
+  //Delete product
   function deleteProduct(productId) {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -73,11 +72,11 @@ export default function ProductPage() {
       });
   }
 
-  // ✅ Notify supplier
+  //Notify supplier
   function notifySupplier(productId) {
     setSending(true);
     axios
-      .post(import.meta.env.VITE_BACKEND_URL + "/api/suppliers/notify", {
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/products/notify", {
         productId,
       })
       .then(() => {
@@ -127,7 +126,8 @@ export default function ProductPage() {
     startIndex,
     startIndex + pageSize
   );
-
+  
+  //KPIs
   const totalCount = allProducts.length;
   const inStockCount = allProducts.filter((p) => p.stock >= 10).length;
   const lowStockCount = allProducts.filter(
@@ -167,7 +167,6 @@ export default function ProductPage() {
 
   return (
     <div className="relative w-full h-full max-h-full overflow-y-auto p-4 md:p-6">
-      {/* Header */}
       <div className="mb-6 flex justify-between items-center flex-wrap gap-3">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
@@ -179,7 +178,7 @@ export default function ProductPage() {
           </p>
         </div>
 
-        {/* 🔔 Notification Bell */}
+        {/*Notification Bell */}
         <div className="relative z-50">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -255,7 +254,7 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* ✅ Confirmation Modal */}
+      {/*Confirmation Modal */}
       {showConfirm && selectedProduct && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 w-80 sm:w-96">
@@ -364,7 +363,7 @@ export default function ProductPage() {
         </Link>
       </div>
 
-      {/* ✅ Responsive Table Wrapper */}
+      {/*Responsive Table Wrapper */}
       <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-x-auto">
         <table className="min-w-[800px] w-full text-sm md:text-base">
           <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">

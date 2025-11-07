@@ -1,29 +1,30 @@
-// pages/search/SearchPage.jsx
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 import ProductCardCat from "../../components/ProductCardCat.jsx";
 
 export default function SearchPage() {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get("query") || "";
+  const query = new URLSearchParams(location.search).get("query") || "";
 
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!query);
 
   useEffect(() => {
-    if (query) {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/products/search?query=${query}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setResults(Array.isArray(data) ? data : []);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setLoading(false);
-        });
+    const q = query.trim();
+    if (!q) { setResults([]); setLoading(false);
+      return;
     }
+
+    setLoading(true);
+
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/search`, {
+        params: { query: q }, 
+      })
+      .then((res) => setResults(Array.isArray(res.data) ? res.data : []))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, [query]);
 
   return (

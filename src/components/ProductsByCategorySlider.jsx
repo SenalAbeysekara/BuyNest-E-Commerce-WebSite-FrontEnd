@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import ProductCard from "./ProductCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import axios from "axios";
 
 export default function ProductsByCategorySlider({
   category,
@@ -15,44 +16,47 @@ export default function ProductsByCategorySlider({
   const sliderRef = useRef(null);
   const location = useLocation();
 
-  // ---------- Fetch ----------
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${apiBase}/api/products/category`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ category }),
-        });
-        const data = await res.json();
+        const res = await axios.post(
+          `${apiBase}/api/products/category`,
+          { category },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const data = res?.data;
         if (!cancelled) setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Error fetching products:", err);
-        if (!cancelled) setProducts([]);
+        if (!cancelled) {
+          console.error("Error fetching products:", err);
+          setProducts([]);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
+
     return () => {
       cancelled = true;
     };
   }, [category, apiBase]);
 
-  // ---------- Track viewport ----------
+  //Track viewport
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // ---------- Page/grid config (NO slick rows) ----------
+  //Page-grid
   const pageCfg = useMemo(() => {
-    if (vw >= 1280) return { cols: 4, rows: 2 }; // 8 per page (desktop)
-    if (vw >= 1024) return { cols: 3, rows: 2 }; // 6 per page (laptop)
-    if (vw >= 768) return { cols: 2, rows: 1 };  // 2 per page (tablet)
-    return { cols: 1, rows: 1 };                 // 1 per page (mobile)
+    if (vw >= 1280) return { cols: 4, rows: 2 }; 
+    if (vw >= 1024) return { cols: 3, rows: 2 }; 
+    if (vw >= 768) return { cols: 2, rows: 1 };  
+    return { cols: 1, rows: 1 };                
   }, [vw]);
 
   const pageSize = pageCfg.cols * pageCfg.rows;
@@ -65,9 +69,8 @@ export default function ProductsByCategorySlider({
     return out;
   }, [products, pageSize]);
 
-  // Re-init slick after route/size/data changes
+  // after changes
   useEffect(() => {
-    // Give layout a tick to paint, then reset to first slide
     const t = setTimeout(() => {
       sliderRef.current?.slickGoTo(0, true);
     }, 50);
@@ -82,7 +85,6 @@ export default function ProductsByCategorySlider({
       </p>
     );
 
-  // Slick shows ONE slide at a time; each slide is a grid "page"
   const settings = {
     dots: false,
     infinite: false,
@@ -93,7 +95,6 @@ export default function ProductsByCategorySlider({
     swipeToSlide: true,
     touchMove: true,
     adaptiveHeight: true,
-    // no 'rows' here at all ✅
   };
 
   const hasMultiplePages = pages.length > 1;

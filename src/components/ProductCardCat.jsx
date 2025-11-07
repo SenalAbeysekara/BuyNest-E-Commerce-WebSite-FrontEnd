@@ -11,7 +11,6 @@ export default function ProductCardCat({ product }) {
     labelledPrice = 0,
     images = [],
     imageUrl: imageUrlProp,
-    unit,
     stock = 0,
   } = product ?? {};
 
@@ -36,7 +35,6 @@ export default function ProductCardCat({ product }) {
 
   const productKey = _id || productId;
 
-  // Stock badge
   let stockLabel = null;
   if (stock === 0) {
     stockLabel = (
@@ -58,7 +56,7 @@ export default function ProductCardCat({ product }) {
       hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-in-out 
       flex flex-col items-center text-center p-4 font-poppins"
     >
-      {/* ✅ Top badges */}
+      {/*Top badges */}
       {(discount || stockLabel) && (
         <div className="absolute top-2 left-2 right-2 flex justify-between items-center">
           {discount && discount > 0 && (
@@ -70,7 +68,7 @@ export default function ProductCardCat({ product }) {
         </div>
       )}
 
-      {/* ✅ Product Image with zoom effect */}
+      {/*Product Image*/}
       <Link
         to={`/product/${productKey}`}
         className="flex flex-col items-center w-full"
@@ -87,14 +85,9 @@ export default function ProductCardCat({ product }) {
         <h3 className="font-medium text-gray-900 line-clamp-2 group-hover:text-accent transition-colors duration-200">
           {name}
         </h3>
-        {unit && (
-          <p className="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-200">
-            {unit}
-          </p>
-        )}
       </Link>
 
-      {/* ✅ Price section */}
+      {/* Price section */}
       <div className="mt-3 flex items-center justify-center gap-2">
         <span className="text-lg font-bold text-accent">
           LKR {cleanPrice.toFixed(2)}
@@ -106,7 +99,7 @@ export default function ProductCardCat({ product }) {
         )}
       </div>
 
-      {/* ✅ Add button */}
+      {/*Add button */}
       <button
         onClick={() => addToCart(product, 1)}
         disabled={stock === 0}
@@ -121,7 +114,7 @@ export default function ProductCardCat({ product }) {
         {stock === 0 ? "Unavailable" : "Add to Cart"}
       </button>
 
-      {/* ✅ Glow border effect on hover */}
+      {/*Glow hover */}
       <div className="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-accent/30 transition-all duration-300 pointer-events-none"></div>
     </div>
   );
