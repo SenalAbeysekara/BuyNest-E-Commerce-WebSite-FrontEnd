@@ -1,1 +1,1 @@
-
+BuyNest Frontend is a modern and responsive e-commerce web interface built with React and Vite. It allows customers to browse products, place orders, track deliveries in real-time, and view purchase summaries. The interface also includes report generation and a financial overview dashboard for better user and admin insights.
